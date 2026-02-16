@@ -4,8 +4,8 @@ from .base import Base
 
 class Wallets(Base):
     __tablename__ = "wallets"
-    uuid: str
-    cash: int
+    uuid: Mapped[str] = mapped_column(primary_key=True)
+    cash: Mapped[int]
 
 # class Operations(Base):
 #     id: int
