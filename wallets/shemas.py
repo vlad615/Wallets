@@ -1,5 +1,4 @@
 from enum import Enum
-from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
 
 
@@ -8,9 +7,7 @@ class Operation(str, Enum):
     withdrow = "withdrow"
 
 
-class WalletsBase(BaseModel):
-    cash: int
+class RequestOperation(BaseModel):
+    operation: Operation
+    cash: int = Field(gt=0)
 
-
-class Wallets(WalletsBase):
-    uuid: UUID = Field(default_factory=uuid4)

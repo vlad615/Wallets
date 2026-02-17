@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Path
-from uuid import UUID
+from uuid import UUID, uuid4
 
-from .shemas import Operation
+from .shemas import RequestOperation
 
 router = APIRouter(prefix="/api/v1/wallets")
 
@@ -13,6 +13,12 @@ async def get_balance(wallet_uuid: UUID = Path(...)):
 
 
 # Операции с балансом кошелька
-@router.post("/{wallet_uuid}/{operation}")
-async def change_balance(operation: Operation, amount: int, wallet_uuid: UUID = Path(...)):
+@router.post("/{wallet_uuid}/{operation}/")
+async def change_balance(operation: RequestOperation, wallet_uuid: UUID = Path(...)):
     pass
+
+
+@router.post("/new_wallet/")
+async def create_wallet():
+    new_id = uuid4()
+    return {"wallet_uuid": new_id}
