@@ -1,10 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 import uvicorn
 
+from errors import OperationError
 from database import Base, db
 
-from wallets import wallets_router
+from api import router as api_router
 
 
 @asynccontextmanager
@@ -14,7 +16,12 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI()
-app.include_router(wallets_router)
+
+@app.exception_handler(OperationError)
+async def operation_error_handler(request: Request, exc: OperationError):
+    return JSONResponse(status_code=409, content={"name": exc.name, "message": exc.massage})
+
+app.include_router(api_router)
 
 if __name__ == "__main__":
     uvicorn.run(app, reload=True)

@@ -21,10 +21,10 @@ class DatabaseEngine:
         return session
 
     async def get_session(self) -> AsyncSession:
-        async with self.get_scope_session() as session:
+        async with self.session_maker() as session:
             yield session
-            await session.remove()
+            await session.close()
 
 
 
-db = DatabaseEngine(settings.db_url, True)
+db = DatabaseEngine(settings.db_url, settings.echo)
