@@ -9,12 +9,13 @@ async def get_cash(session: AsyncSession, uuid: UUID) -> Wallets | None:
     return await session.get(Wallets, uuid)
 
 
-async def create_wallet(session: AsyncSession, wallet: Wallet) -> Wallets:
+async def new_wallet(session: AsyncSession, wallet: Wallet) -> Wallets:
     new_wallet = Wallets(**wallet.model_dump())
     session.add(new_wallet)
     await session.commit()
     await session.refresh(new_wallet)
     return new_wallet
+
 
 async def make_operation(session: AsyncSession, operation: RequestOperation, uuid: UUID) -> Wallets | None:
     wallet = await get_cash(session, uuid)

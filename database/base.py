@@ -26,5 +26,4 @@ class DatabaseEngine:
             await session.close()
 
 
-
-db = DatabaseEngine(settings.db_url, settings.echo)
+db = DatabaseEngine(settings.db_url, True)

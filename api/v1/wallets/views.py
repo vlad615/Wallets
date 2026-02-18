@@ -5,7 +5,7 @@ from uuid import UUID
 from starlette.exceptions import HTTPException
 
 from database import db
-from .crud import get_cash, create_wallet, make_operation
+from .crud import get_cash, new_wallet, make_operation
 from .shemas import RequestOperation, Wallet
 
 router = APIRouter(prefix="/wallets")
@@ -22,7 +22,7 @@ async def get_balance(wallet_uuid: UUID = Path(...), session: AsyncSession = Dep
 
 
 # Операции с балансом кошелька
-@router.post("/{wallet_uuid}/{operation}/", response_model=Wallet)
+@router.post("/{wallet_uuid}/operation/", response_model=Wallet)
 async def change_balance(operation: RequestOperation, wallet_uuid: UUID = Path(...),
                          session: AsyncSession = Depends(db.get_session)):
     result = await make_operation(session, operation, wallet_uuid)
@@ -34,4 +34,4 @@ async def change_balance(operation: RequestOperation, wallet_uuid: UUID = Path(.
 
 @router.post("/new_wallet/", response_model=Wallet)
 async def create_wallet(balance: Wallet, session: AsyncSession = Depends(db.get_session)):
-    return await create_wallet(session, balance)
+    return await new_wallet(session, balance)
